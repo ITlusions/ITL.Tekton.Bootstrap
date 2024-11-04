@@ -10,7 +10,7 @@ COPY requirements.txt /tmp/requirements.txt
 # Install dependencies including uv
 RUN apk add --no-cache curl gcc musl-dev linux-headers
 RUN curl -lsSf https://bootstrap.pypa.io/get-pip.py | python
-RUN pip install -r /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 # Expose the port the app runs on
 EXPOSE 8000
