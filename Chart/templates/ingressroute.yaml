@@ -12,5 +12,6 @@ spec:
     kind: Rule
     services:
     - name: {{ .Release.Name }}-fastapi
+      port: 8080 
   tls:
     secretName: pac-itlusions-com-tls
