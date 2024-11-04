@@ -6,10 +6,10 @@ app = FastAPI(docs_url="/docs")
 
 # Load the Kubernetes configuration
 # Use this for local development
-config.load_kube_config()
+# config.load_kube_config()
 
 # Use this when running in a pod within the cluster
-# config.load_incluster_config()
+config.load_incluster_config()
 
 NAMESPACE = "your-namespace"
 
