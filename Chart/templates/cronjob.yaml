@@ -9,10 +9,10 @@ spec:
       template:
         spec:
           containers:
-            - name: {{ .Release.Name }}-pac-bootstrap-
+            - name: {{ .Release.Name }}-pac-bootstrap
               image: alpine:latest
               command: ["sh", "-c", "echo Hello, Kubernetes! && echo Repo URL: $REPO_URL"]
               env:
                 - name: REPO_URL
                   value: ""
-          restartPolicy: OnFailure
+          restartPolicy: Never
