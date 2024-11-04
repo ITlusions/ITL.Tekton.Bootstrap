@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 from kubernetes import client, config
 from pydantic import BaseModel
 
-app = FastAPI(docs_url="/hooks/docs")
+app = FastAPI(docs_url="/docs")
 
 # Load the Kubernetes configuration
 # Use this for local development
