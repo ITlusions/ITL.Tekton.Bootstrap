@@ -5,7 +5,7 @@ FROM ghcr.io/astral-sh/uv:python3.12-alpine
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-COPY . .
+COPY /src .
 
 # Install dependencies including uv
 RUN apk add --no-cache curl gcc musl-dev linux-headers
