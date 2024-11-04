@@ -1,24 +1,24 @@
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: {{ .Release.Name }}-fastapi
-  labels:
-    app: {{ .Release.Name }}-fastapi
-spec:
-  entryPoints:
-    - web
-    - websecure  # Ensure Traefik is configured to use this entry point
-  routes:
-    {{- range .Values.ingress.hosts }}
-    - match: Host(`{{ .host }}`) && PathPrefix(`/bootstrap`)
-      kind: Rule
-      services:
-        - name: {{ .Release.Name }}-fastapi
-          port: {{ $.Values.service.port }}
-    {{- end }}
-  tls:
-    {{- range .Values.ingress.tlsHosts }}
-    secretName: {{ .secretName }}  # Secret that contains the TLS cert
-    hosts:
-      - {{ .host }}
-    {{- end }}
+# apiVersion: traefik.containo.us/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: {{ .Release.Name }}-fastapi
+#   labels:
+#     app: {{ .Release.Name }}-fastapi
+# spec:
+#   entryPoints:
+#     - web
+#     - websecure  # Ensure Traefik is configured to use this entry point
+#   routes:
+#     {{- range .Values.ingress.hosts }}
+#     - match: Host(`{{ .host }}`) && PathPrefix(`/bootstrap`)
+#       kind: Rule
+#       services:
+#         - name: {{ .Release.Name }}-fastapi
+#           port: {{ $.Values.service.port }}
+#     {{- end }}
+#   tls:
+#     {{- range .Values.ingress.tlsHosts }}
+#     secretName: {{ .secretName }}  # Secret that contains the TLS cert
+#     hosts:
+#       - {{ .host }}
+#     {{- end }}
