@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: pac-itlusions-com
+spec:
+  secretName: pac-itlusions-com-tls
+  issuerRef:
+    name: letsencrypt-issuer
+    kind: ClusterIssuer
+  commonName: pac.itlusions.com
+  dnsNames:
+    - pac.itlusions.nl
+    - pac.itlusions.com
