@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, Depends
 from models.job_model import JobSpec
 from controllers.job_controller import create_job
 from config.settings import settings
+from base.auth import get_api_key
 
 router = APIRouter(prefix=settings.prefix)
 
@@ -10,7 +11,7 @@ async def test_api():
     return {"message": "OK"}
 
 @router.post("/bootstrap")
-async def trigger_job(request: Request):
+async def trigger_job(request: Request, api_key: str = Depends(get_api_key)):
     event_type = request.headers.get("X-GitHub-Event")
     if event_type != "repository":
         raise HTTPException(status_code=400, detail="Invalid event type")
