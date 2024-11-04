@@ -1,44 +1,71 @@
 from fastapi import FastAPI, HTTPException, Request
-import subprocess
-import os
+from kubernetes import client, config
+from pydantic import BaseModel
 
 app = FastAPI(docs_url="/docs")
 
-# Kubernetes namespace where the CronJob is located
-NAMESPACE = "your-namespace"  # Replace with your actual namespace
+# Load the Kubernetes configuration
+# Use this for local development
+config.load_kube_config()
+
+# Use this when running in a pod within the cluster
+# config.load_incluster_config()
+
+NAMESPACE = "your-namespace"
+
+class JobSpec(BaseModel):
+    name: str
+    repo_url: str
+
+def create_job(job_spec: JobSpec):
+    job = client.V1Job(
+        api_version="batch/v1",
+        kind="Job",
+        metadata=client.V1ObjectMeta(name=job_spec.name),
+        spec=client.V1JobSpec(
+            template=client.V1PodTemplateSpec(
+                metadata=client.V1ObjectMeta(labels={"job": job_spec.name}),
+                spec=client.V1PodSpec(
+                    containers=[
+                        client.V1Container(
+                            name="alpine-container",
+                            image="alpine:latest",
+                            command=["/bin/sh", "-c", "echo $REPO_URL"],
+                            env=[client.V1EnvVar(name="REPO_URL", value=job_spec.repo_url)]
+                        )
+                    ],
+                    restart_policy="Never"
+                )
+            )
+        )
+    )
+
+    batch_v1 = client.BatchV1Api()
+    batch_v1.create_namespaced_job(namespace=NAMESPACE, body=job)
 
 @app.post("/webhook")
 async def trigger_job(request: Request):
-    # Get the headers and payload from the request
     event_type = request.headers.get("X-GitHub-Event")
     if event_type != "repository":
         raise HTTPException(status_code=400, detail="Invalid event type")
 
     payload = await request.json()
-
-    # Check if the repository is created
+    
     if payload.get("action") == "created":
         try:
-            job_name = "tkn-bootstrap-repo-job"  # The name for the new Job
+            job_name = "tkn-bootstrap-repo-job"
+            repo_url = payload.get("repository", {}).get("clone_url")
+            if not repo_url:
+                raise HTTPException(status_code=400, detail="Repository URL not found in payload")
 
-            # Command to create the Job from the CronJob
-            command = [
-                "kubectl",
-                "create",
-                "job",
-                "--from=cronjob/pac-bootstrap-cronjob",
-                job_name,
-                "-n",
-                NAMESPACE
-            ]
+            job_spec = JobSpec(name=job_name, repo_url=repo_url)
 
-            # Execute the command
-            result = subprocess.run(command, check=True, capture_output=True, text=True)
+            create_job(job_spec)
 
-            return {"message": "Job created successfully", "output": result.stdout}
+            return {"message": "Job created successfully", "job_name": job_name}
 
-        except subprocess.CalledProcessError as e:
-            raise HTTPException(status_code=500, detail=f"Error creating job: {e.stderr}")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
 
     return {"message": "No action taken, not a repository creation event."}
 
