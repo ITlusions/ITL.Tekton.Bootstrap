@@ -1,9 +1,9 @@
 replicaCount: 1
 
 image:
-  repository: fastapi-webhook
+  repository: docker.io/nweistra/itltknbootstrap
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 
 service:
   name: fastapi-webhook

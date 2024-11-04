@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-cronjob
+
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ .Release.Name }}-pac-bootstrap-
+              image: alpine:latest
+              command: ["sh", "-c", "echo Hello, Kubernetes! && echo Repo URL: $REPO_URL"]
+              env:
+                - name: REPO_URL
+                  value: ""
+          restartPolicy: OnFailure
