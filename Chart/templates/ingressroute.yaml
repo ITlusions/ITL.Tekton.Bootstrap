@@ -8,7 +8,7 @@ spec:
     - web
     - websecure
   routes:
-  - match: Host(`pac.itlusions.com`) && PathPrefix(`/hooks`)
+  - match: Host(`pac.itlusions.com`) # && PathPrefix(`/hooks`)
     kind: Rule
     services:
     - name: {{ .Release.Name }}-fastapi
