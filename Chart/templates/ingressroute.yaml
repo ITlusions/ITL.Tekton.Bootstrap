@@ -8,12 +8,12 @@ spec:
     - web
     - websecure
   routes:
-  - match: Host(`pac.itlusions.com`) && PathPrefix(`/webhooks`)
+  - match: Host(`pac.itlusions.com`) && PathPrefix(`/tkn`)
     kind: Rule
     services:
     - name: {{ .Release.Name }}-fastapi
       port: 8000
-    middlewares:
-      - name: {{ .Release.Name }}-strip-prefix-middleware
+    # middlewares:
+    #   - name: {{ .Release.Name }}-strip-prefix-middleware
   tls:
     secretName: pac-itlusions-com-tls

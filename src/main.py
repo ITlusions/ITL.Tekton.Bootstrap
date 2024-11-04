@@ -1,14 +1,11 @@
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, APIRouter, HTTPException, Request
 from kubernetes import client, config
 from pydantic import BaseModel
 
-app = FastAPI(docs_url="/docs")
 
-# Load the Kubernetes configuration
-# Use this for local development
-# config.load_kube_config()
+app = FastAPI(docs_url="/tkn/docs",openapi_url="/tkn/openapi.json")
+router = APIRouter(prefix="/tkn")
 
-# Use this when running in a pod within the cluster
 config.load_incluster_config()
 
 NAMESPACE = "your-namespace"
@@ -39,35 +36,39 @@ def create_job(job_spec: JobSpec):
             )
         )
     )
-
     batch_v1 = client.BatchV1Api()
     batch_v1.create_namespaced_job(namespace=NAMESPACE, body=job)
 
-@app.post("/webhook")
+
+@router.get("/test")
+async def test_api():
+    return {"message": "OK"}
+
+@router.post("/bootstrap")
 async def trigger_job(request: Request):
     event_type = request.headers.get("X-GitHub-Event")
     if event_type != "repository":
         raise HTTPException(status_code=400, detail="Invalid event type")
 
     payload = await request.json()
-    
+
     if payload.get("action") == "created":
         try:
             job_name = "tkn-bootstrap-repo-job"
             repo_url = payload.get("repository", {}).get("clone_url")
             if not repo_url:
                 raise HTTPException(status_code=400, detail="Repository URL not found in payload")
-
             job_spec = JobSpec(name=job_name, repo_url=repo_url)
-
             create_job(job_spec)
-
             return {"message": "Job created successfully", "job_name": job_name}
 
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
     return {"message": "No action taken, not a repository creation event."}
+
+# Register the router with the FastAPI app
+app.include_router(router)
 
 if __name__ == "__main__":
     import uvicorn
