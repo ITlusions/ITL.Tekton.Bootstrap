@@ -103,10 +103,10 @@ jobs:
           echo "Building Docker image with tag: $FULL_TAG"
 
           # Build and tag the Docker image
-          docker build -t nweistra/itltkbootstrap:${FULL_TAG} .
+          docker build -t nweistra/itltknbootstrap:${FULL_TAG} .
 
           # Promote versioned package to latest
-          docker tag nweistra/itltkbootstrap:${FULL_TAG} nweistra/itltkbootstrap:latest
+          docker tag nweistra/itltknbootstrap:${FULL_TAG} nweistra/itltknbootstrap:latest
 
           # Tag commit in git
           git tag -a "${FULL_TAG}" -m "Release version ${FULL_TAG}"
@@ -118,8 +118,8 @@ jobs:
       - name: Push Docker Image
         run: |
           echo "Pushing Docker image with tag: $FULL_TAG"
-          docker push nweistra/itltkbootstrap:${FULL_TAG}
-          docker push nweistra/itltkbootstrap:latest 
+          docker push nweistra/itltknbootstrap:${FULL_TAG}
+          docker push nweistra/itltknbootstrap:latest 
 
       - name: Push Docker Image with -release tag (only for main branch)
         if: github.ref == 'refs/heads/main'
@@ -133,12 +133,12 @@ jobs:
           echo "Pushing Docker image with release tag: $RELEASE_TAG"
 
           # Tag the image with the release suffix
-          docker tag nweistra/itltkbootstrap:${FULL_TAG} nweistra/itltkbootstrap:${RELEASE_TAG}
-          docker tag nweistra/itltkbootstrap:latest nweistra/itltkbootstrap:release-latest
+          docker tag nweistra/itltknbootstrap:${FULL_TAG} nweistra/itltknbootstrap:${RELEASE_TAG}
+          docker tag nweistra/itltknbootstrap:latest nweistra/itltknbootstrap:release-latest
 
           # Push the images with the release tags
-          docker push nweistra/itltkbootstrap:${RELEASE_TAG}
-          docker push nweistra/itltkbootstrap:release-latest
+          docker push nweistra/itltknbootstrap:${RELEASE_TAG}
+          docker push nweistra/itltknbootstrap:release-latest
 
           # Set the output variable for the full tag
           echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
@@ -151,8 +151,8 @@ jobs:
           body: |
             Docker image version: `${{ env.RELEASE_TAG }}`
             Pushed Docker images:
-            - `nweistra/itltkbootstrap:${{ env.RELEASE_TAG }}`
-            - `nweistra/itltkbootstrap:latest`
+            - `nweistra/itltknbootstrap:${{ env.RELEASE_TAG }}`
+            - `nweistra/itltknbootstrap:latest`
           draft: false
           prerelease: false
         env:
