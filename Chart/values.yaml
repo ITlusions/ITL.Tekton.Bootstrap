@@ -1,0 +1,23 @@
+replicaCount: 1
+
+image:
+  repository: fastapi-webhook
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  name: fastapi-webhook
+  type: ClusterIP
+  port: 8000
+
+ingress:
+  enabled: true
+  hosts:
+    - host: pac.itlusions.com
+    - host: pac.itlusions.nl
+  tlsHosts:
+    - host: pac.itlusions.nl
+      secretName: example1-tls
+    - host: pac.itlusions.nl
+      secretName: example2-tls
+
