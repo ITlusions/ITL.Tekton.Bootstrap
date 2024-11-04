@@ -12,3 +12,5 @@ spec:
     kind: Rule
     services:
     - name: {{ .Release.Name }}-fastapi
+  tls:
+    secretName: pac-itlusions-com-tls-secret
