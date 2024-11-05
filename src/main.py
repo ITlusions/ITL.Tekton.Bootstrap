@@ -18,7 +18,7 @@ if __name__ == "__main__":
             },
             "access": {
                 "()": "uvicorn.logging.AccessFormatter",
-                "fmt": '%(asctime)s::%(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s',
+                "fmt": '%(asctime)s::%(levelprefix)s %(client_addr)s - %(remote_addr)s - %(x_forward_for)s - "%(request_line)s" %(status_code)s',
             },
         },
         "handlers": {
