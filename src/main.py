@@ -15,7 +15,11 @@ if __name__ == "__main__":
             "default": {
                 "()": "uvicorn.logging.DefaultFormatter",
                 "fmt": "%(asctime)s - %(levelname)s - %(message)s - Client IP: %(remote_addr)s",
-            }
+            },
+            "access": {
+                "()": "uvicorn.logging.AccessFormatter",
+                "fmt": '%(asctime)s::%(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s',
+            },
         },
         "handlers": {
             "default": {
