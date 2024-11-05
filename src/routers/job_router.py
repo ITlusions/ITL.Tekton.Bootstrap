@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter, HTTPException, Request, Depends
 from models.job_model import JobSpec
 from controllers.job_controller import create_job
@@ -5,6 +6,9 @@ from config.settings import settings
 from base.auth import get_api_key
 
 router = APIRouter(prefix=settings.prefix)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @router.get("/test")
 async def test_api(request: Request):
@@ -16,7 +20,7 @@ async def test_api(request: Request):
     client_ip = x_forwarded_for.split(",")[0] if x_forwarded_for else request.client.host
     
     # Log the client's IP to the console
-    print(f"Client IP: {client_ip}")
+    logger.info(f"Client IP: {client_ip}")
     
     return headers
 
