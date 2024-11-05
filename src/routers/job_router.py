@@ -7,7 +7,6 @@ from base.auth import get_api_key
 router = APIRouter(prefix=settings.prefix)
 
 @router.get("/test")
-
 async def test_api(request: Request):
     headers = dict(request.headers)
     return headers

@@ -13,7 +13,7 @@ spec:
     services:
     - name: {{ .Release.Name }}-fastapi
       port: 8000
-    # middlewares:
-    #   - name: {{ .Release.Name }}-strip-prefix-middleware
+    middlewares:
+      - name: {{ .Release.Name }}-forward-client-ip
   tls:
     secretName: pac-itlusions-com-tls
