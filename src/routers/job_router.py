@@ -9,9 +9,16 @@ router = APIRouter(prefix=settings.prefix)
 @router.get("/test")
 async def test_api(request: Request):
     headers = dict(request.headers)
+    
+    # Extract the client's IP from the "X-Forwarded-For" header, if available
+    # To get this working, set externalTrafficPolicy: Local
+    x_forwarded_for = headers.get("x-forwarded-for")
+    client_ip = x_forwarded_for.split(",")[0] if x_forwarded_for else request.client.host
+    
+    # Log the client's IP to the console
+    print(f"Client IP: {client_ip}")
+    
     return headers
-    # client_ip = request.headers.get("X-Forwarded-For")
-    # return {"message": "OK - {client_ip}"}
 
 @router.post("/bootstrap")
 async def trigger_job(request: Request, api_key: str = Depends(get_api_key)):

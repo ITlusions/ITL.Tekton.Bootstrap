@@ -2,7 +2,6 @@ apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: {{ .Release.Name }}-ingressroute
-
 spec:
   entryPoints:
     - web
@@ -13,7 +12,7 @@ spec:
     services:
     - name: {{ .Release.Name }}-fastapi
       port: 8000
-    middlewares:
-      - name: {{ .Release.Name }}-forward-client-ip
+    # middlewares:
+    #   - name: {{ .Release.Name }}-forward-client-ip
   tls:
     secretName: pac-itlusions-com-tls
