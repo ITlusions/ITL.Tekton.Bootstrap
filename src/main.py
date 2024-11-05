@@ -32,4 +32,4 @@ if __name__ == "__main__":
             "level": "INFO",
         },
     }
-    uvicorn.run(app, host="0.0.0.0", port=8000, proxy_headers=True, log_config=log_config)
+    uvicorn.run(app, host="0.0.0.0", port=8000, proxy_headers=True, log_config=log_config, forwarded_allow_ips='*')
