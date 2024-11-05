@@ -8,4 +8,24 @@ app.include_router(job_router)
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000, proxy_headers=True)
+    log_config = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "default": {
+                "()": "uvicorn.logging.DefaultFormatter",
+                "fmt": "%(asctime)s - %(levelname)s - %(message)s - Client IP: %(remote_addr)s",
+            }
+        },
+        "handlers": {
+            "default": {
+                "class": "logging.StreamHandler",
+                "formatter": "default",
+            }
+        },
+        "root": {
+            "handlers": ["default"],
+            "level": "INFO",
+        },
+    }
+    uvicorn.run(app, host="0.0.0.0", port=8000, proxy_headers=True, log_config=log_config)
