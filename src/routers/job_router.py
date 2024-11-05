@@ -7,8 +7,12 @@ from base.auth import get_api_key
 router = APIRouter(prefix=settings.prefix)
 
 @router.get("/test")
-async def test_api():
-    return {"message": "OK"}
+
+async def test_api(request: Request):
+    headers = dict(request.headers)
+    return headers
+    # client_ip = request.headers.get("X-Forwarded-For")
+    # return {"message": "OK - {client_ip}"}
 
 @router.post("/bootstrap")
 async def trigger_job(request: Request, api_key: str = Depends(get_api_key)):
