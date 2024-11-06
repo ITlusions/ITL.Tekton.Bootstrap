@@ -1,5 +1,8 @@
 import sys
 import logging.config
+from uvicorn.logging import AccessFormatter
+
+access_log_format = '%(asctime)s :: %(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s'
 
 def get_log_config():
     return {
