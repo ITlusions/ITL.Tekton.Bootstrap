@@ -10,7 +10,7 @@ def get_log_config():
         'disable_existing_loggers': False,
         'formatters': {
             'default': {'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'},
-            'access': {'format': '%(asctime)s - %(name)s - %(levelname)s - %(message)s'},
+            'access': {'format': '%(asctime)s :: %(levelprefix)s %(client_addr)s - "%(request_line)s" %(status_code)s'},
         },
         'handlers': {
             'default': {'formatter': 'default', 'class': 'logging.StreamHandler', 'stream': sys.stderr},
