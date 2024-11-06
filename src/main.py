@@ -8,28 +8,7 @@ app.include_router(job_router)
 
 if __name__ == "__main__":
     import uvicorn
-    log_config = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "formatters": {
-            "default": {
-                "()": "uvicorn.logging.DefaultFormatter",
-                "fmt": "%(asctime)s - %(levelname)s - %(message)s - Client IP: %(remote_addr)s",
-            },
-            "access": {
-                "()": "uvicorn.logging.AccessFormatter",
-                "fmt": '%(asctime)s::%(levelprefix)s %(client_addr)s - %(remote_addr)s - %(x_forward_for)s - "%(request_line)s" %(status_code)s',
-            },
-        },
-        "handlers": {
-            "default": {
-                "class": "logging.StreamHandler",
-                "formatter": "default",
-            }
-        },
-        "root": {
-            "handlers": ["default"],
-            "level": "INFO",
-        },
-    }
-    uvicorn.run(app, host="0.0.0.0", port=8000, proxy_headers=True, log_config=log_config, forwarded_allow_ips='*')
+    log_config = uvicorn.config.LOGGING_CONFIG
+    log_config["formatters"]["access"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
+    log_config["formatters"]["default"]["fmt"] = "%(asctime)s - %(levelname)s - %(message)s"
+    uvicorn.run(app, host="0.0.0.0", port=8000, proxy_headers=True, log_config=log_config, forwarded_allow_ips="*")
