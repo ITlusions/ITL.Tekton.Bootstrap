@@ -1,11 +1,11 @@
 import logging
 from fastapi import APIRouter, HTTPException, Request, Depends
 from models.job_model import JobSpec
-from controllers.job_controller import create_job
+#from controllers.job_controller import create_job
 from config.settings import settings
 from base.auth import get_api_key
 
-router = APIRouter(prefix=settings.prefix)
+router = APIRouter()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
