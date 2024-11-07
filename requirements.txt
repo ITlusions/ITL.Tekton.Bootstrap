@@ -3,3 +3,8 @@ uvicorn[standard]
 pydantic
 pydantic_settings
 kubernetes
+opentelemetry-api==1.17.0
+opentelemetry-sdk==1.17.0
+opentelemetry-instrumentation-fastapi==0.40b0
+opentelemetry-exporter-jaeger==1.17.0
+opentelemetry-exporter-prometheus
